@@ -1,3 +1,4 @@
+import { RolesGuard } from './guards/roles.guard';
 import { Module } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthController } from './auth.controller';
@@ -8,7 +9,7 @@ import { PassportModule } from '@nestjs/passport';
 import { PassportAuthController } from './passport-auth.controller.';
 import { LocalStrategy } from './strategies/local.strategies';
 @Module({
-  providers: [AuthService, LocalStrategy],
+  providers: [AuthService, LocalStrategy, RolesGuard],
   controllers: [AuthController, PassportAuthController],
   imports: [
     UsersModule,
@@ -20,5 +21,6 @@ import { LocalStrategy } from './strategies/local.strategies';
     }),
     PassportModule,
   ],
+  exports: [RolesGuard],
 })
 export class AuthModule {}
