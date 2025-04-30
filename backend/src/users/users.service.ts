@@ -47,4 +47,15 @@ export class UsersService {
     async findUserByUsername(username: string): Promise<User | undefined> {
         return users.find(user => user.username === username);
     }
+    async findUserById(id: number): Promise<User | undefined> {
+        return users.find(user => user.id === id);
+    }
+    async deleteUserById(id: number): Promise<User | undefined> {
+        const user = await this.findUserById(id);
+        if (user) {
+            users.splice(users.indexOf(user), 1);
+            return user;
+        }
+        return undefined;
+    }
 }
