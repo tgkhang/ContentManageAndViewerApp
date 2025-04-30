@@ -1,16 +1,16 @@
 import {
-    Body,
-    Controller,
-    Get,
-    HttpCode,
-    HttpStatus,
-    NotImplementedException,
-    Post,
-    Request,
-    UseGuards,
-  } from '@nestjs/common';
-  import { AuthService } from './auth.service';
-  import { AuthGuard } from './guards/auth.guard';
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  NotImplementedException,
+  Post,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthService } from './auth.service';
+import { AuthGuard } from './guards/auth.guard';
 import { PassportLocalGuard } from './guards/passport-local.guard';
 
 @Controller('auth-v2')
