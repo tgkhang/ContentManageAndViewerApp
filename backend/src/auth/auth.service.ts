@@ -1,19 +1,19 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common"
-import { JwtService } from "@nestjs/jwt"
-import { UsersService } from "src/users/users.service"
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { UsersService } from 'src/users/users.service';
 
-type AuthInput = { email: string; password: string }
+type AuthInput = { email: string; password: string };
 type SigninData = {
-  userId: number
-  username: string
-  role: string
-}
+  userId: string;
+  username: string;
+  role: string;
+};
 type AuthResponse = {
-  accessToken: string
-  userId: number
-  username: string
-  role: string
-}
+  accessToken: string;
+  userId: string;
+  username: string;
+  role: string;
+};
 
 @Injectable()
 export class AuthService {
@@ -24,24 +24,31 @@ export class AuthService {
 
   async authenticate(input: AuthInput): Promise<AuthResponse | null> {
     //validate
-    const user = await this.validateUser(input)
+    const user = await this.validateUser(input);
     if (!user) {
-      throw new UnauthorizedException("Invalid credentials")
+      throw new UnauthorizedException('Invalid credentials');
     }
-    return this.signIn(user)
+    return this.signIn(user);
   }
 
   async validateUser(input: AuthInput): Promise<SigninData | null> {
-    const user = await this.usersService.findOne(input.email)
+    try {
+      const user = await this.usersService.findByEmail(input.email);
 
-    if (user && user.password === input.password) {
-      return {
-        username: user.username,
-        userId: user.id,
-        role: user.role,
+      // hash 
+
+      if (user && user.password === input.password) {
+        return {
+          username: user.username,
+          userId: user._id.toString(), // Convert MongoDB ObjectId to string
+          role: user.role,
+        };
       }
+      return null;
+    } catch (err) {
+      console.log(err);
+      return null; 
     }
-    return null
   }
 
   async signIn(user: SigninData): Promise<AuthResponse> {
@@ -49,14 +56,14 @@ export class AuthService {
       userId: user.userId,
       username: user.username,
       role: user.role,
-    }
+    };
 
-    const accessToken = await this.jwtService.signAsync(tokenPayload)
+    const accessToken = await this.jwtService.signAsync(tokenPayload);
     return {
       accessToken: accessToken,
       userId: user.userId,
       username: user.username,
       role: user.role,
-    }
+    };
   }
 }

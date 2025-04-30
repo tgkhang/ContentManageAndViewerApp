@@ -13,7 +13,9 @@ export class AuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest();
     const authorization = request.headers.authorization; //bearer token
-
+    if (!authorization) {
+      throw new UnauthorizedException('No authorization header provided');
+    }
     const token = authorization?.split(' ')[1];
 
     if (!token) {
@@ -22,7 +24,7 @@ export class AuthGuard implements CanActivate {
 
     try {
       const tokenPayload = await this.jwtService.verifyAsync(token);
-      console.log(tokenPayload);
+      //console.log(tokenPayload);
       request.user = {
         userId: tokenPayload.userId,
         username: tokenPayload.username,

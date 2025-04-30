@@ -13,10 +13,12 @@ export class UsersService {
     // Check if the user already exists
     const existingEmail = this.userModel.findOne({
       email: createUserDto.email,
-    });
+    }).exec();
+
     const existingUsername = this.userModel.findOne({
       username: createUserDto.username,
-    });
+    }).exec();
+    
     if (!existingEmail) {
       throw new Error('Email already exists');
     }
@@ -65,6 +67,7 @@ export class UsersService {
     }
     return user;
   }
+
   async findByUsername(username: string) {
     const user = await this.userModel.findOne({ username }).exec();
     if (!user) {
