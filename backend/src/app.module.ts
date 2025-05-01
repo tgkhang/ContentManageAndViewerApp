@@ -4,18 +4,37 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ContentsModule } from './contents/contents.module';
+import { MulterModule } from '@nestjs/platform-express';
+import { S3Module } from './s3/s3.module';
 
 @Module({
   imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      //envFilePath: '.env',
+    }),
     UsersModule,
     AuthModule,
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    MongooseModule.forRoot('mongodb+srv://tgkhang22:EJehGssMrzzcCte3@cluster0.e5ozfcg.mongodb.net/blogdb?retryWrites=true&w=majority&appName=Cluster0'),
+    //MongooseModule.forRoot(process.env.MONGODB_URI!),
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        uri: configService.get<string>("MONGODB_URI"),
+      }),
+    }),
     ContentsModule,
+    MulterModule.register({
+      limits: {
+        fileSize: 10 * 1024 * 1024, // 10MB
+      },
+    }),
+    S3Module,
   ],
   controllers: [AppController],
   providers: [AppService],
