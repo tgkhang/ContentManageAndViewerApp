@@ -1,12 +1,6 @@
-import {
-  createContext,
-  useEffect,
-  useReducer,
-  ReactNode,
-  Dispatch,
-} from "react";
+import { createContext, useEffect, useReducer, ReactNode } from "react";
 import { isValidToken, setSession } from "../utils/jwt";
-import axiosInstance from "../utils/axios";
+import { validateAPI } from "../utils/api";
 
 // ----------------------------------------------------------------------
 
@@ -91,7 +85,6 @@ const AuthContext = createContext<AuthContextType>({
   logout: async () => {},
 });
 
-
 interface AuthProviderProps {
   children: ReactNode;
 }
@@ -106,10 +99,16 @@ function AuthProvider({ children }: AuthProviderProps) {
 
         if (accessToken && isValidToken(accessToken)) {
           setSession(accessToken);
-          const response = await axiosInstance.get<User>(
-            `/auth/get-account-by-token?accessToken=${accessToken}`
-          );
-          const user = response.data;
+
+          const response = await validateAPI();
+
+          // Create user object from response
+          const user = {
+            id: response.data.userId,
+            name: response.data.username,
+            email: "",
+            role: response.data.role,
+          };
 
           dispatch({
             type: "INITIALIZE",

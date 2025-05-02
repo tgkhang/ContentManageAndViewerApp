@@ -5,8 +5,8 @@ import LoadingScreen from "../components/LoadingScreen";
 import AuthGuard from "../guards/Authguard";
 
 // Lazy load components
-const Loadable = (Component:any) => {
-  const WrappedComponent = (props:any) => {
+const Loadable = (Component: any) => {
+  const WrappedComponent = (props: any) => {
     return (
       <Suspense fallback={<LoadingScreen />}>
         <Component {...props} />
@@ -22,7 +22,11 @@ const Loadable = (Component:any) => {
 const Login = Loadable(lazy(() => import("../pages/authentication/Login")));
 
 // MAINLAYOUT
-const MainLayout = Loadable(lazy(() => import("../components/layout/MainLayout")));
+const MainLayout = Loadable(
+  lazy(() => import("../components/layout/MainLayout"))
+);
+
+const TestPage = Loadable(lazy(() => import("../pages/user/TestPage")));
 
 export default function Router() {
   return useRoutes([
@@ -41,7 +45,7 @@ export default function Router() {
         { path: "", element: <Navigate to="/auth/login" replace /> },
       ],
     },
-    
+
     // Admin Routes
     {
       path: "admin",
@@ -53,7 +57,8 @@ export default function Router() {
       children: [
         {
           path: "",
-          element: <Navigate to="/admin/studentList" replace />,
+          // element: <Navigate to="/admin/studentList" replace />,
+          element: <TestPage />,
         },
         // {
         //   path: "studentList",
@@ -61,7 +66,7 @@ export default function Router() {
         // },
       ],
     },
-    
+
     // Editor Routes
     {
       path: "editor",
@@ -71,20 +76,24 @@ export default function Router() {
         </AuthGuard>
       ),
       children: [
-        { path: "", element: <Navigate to="/editor/dashboard" replace /> },
+        {
+          path: "",
+          // element: <Navigate to="/admin/studentList" replace />,
+          element: <TestPage />,
+        },
         // {
         //   path: "course",
         //   element: <TeacherCoursePage />,
         // },
       ],
     },
-    
+
     // Root redirect
     {
       path: "/",
       element: <Navigate to="/auth/login" replace />,
     },
-    
+
     // 404 and catch all
     {
       path: "*",

@@ -3,7 +3,9 @@ import { CreateUserDto, UpdateUserDto } from "../types/user";
 import { CreateContentDto, UpdateContentDto } from "../types/content";
 
 // authentication
-//export const loginApi = (data) => axiosInstance.post("/auth/login", data);
+export const loginAPI = (data: { email: string; password: string }) =>
+  axiosInstance.post("/auth-v2/login", data);
+export const validateAPI = () => axiosInstance.get("/auth/me");
 
 //users
 export const createUserAPI = (data: CreateUserDto) =>

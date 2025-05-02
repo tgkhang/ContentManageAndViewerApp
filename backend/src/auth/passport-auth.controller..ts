@@ -27,6 +27,6 @@ export class PassportAuthController {
 
   @Get('me')
   getUserInfo(@Request() request) {
-    throw new NotImplementedException('Not implemented yet');
+    return request.user;
   }
 }
