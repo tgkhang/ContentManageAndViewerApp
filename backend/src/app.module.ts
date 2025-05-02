@@ -8,6 +8,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ContentsModule } from './contents/contents.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { S3Module } from './s3/s3.module';
+import { UploadsModule } from './uploads/uploads.module';
+
 
 @Module({
   imports: [
@@ -35,6 +37,7 @@ import { S3Module } from './s3/s3.module';
       },
     }),
     S3Module,
+    UploadsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

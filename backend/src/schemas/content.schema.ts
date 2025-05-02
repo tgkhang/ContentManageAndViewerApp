@@ -20,7 +20,7 @@ export class ContentBlock {
   @Prop()
   caption?: string
 
-  @Prop()
+  @Prop({ type: MongooseSchema.Types.Mixed })
   metadata?: Record<string, any>
 }
 
@@ -29,7 +29,7 @@ const ContentBlockSchema = new MongooseSchema(
     type: { type: String, required: true, enum: Object.values(BlockType) },
     value: { type: String, required: true },
     caption: { type: String },
-    metadata: { type: Object },
+    metadata: { type: MongooseSchema.Types.Mixed },
   },
   { _id: true, timestamps: false },
 )
