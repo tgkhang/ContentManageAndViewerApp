@@ -4,13 +4,13 @@ import { UpdateContentDto } from './dto/update-content.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Content } from 'src/schemas/content.schema';
 import { Model } from 'mongoose';
-import { S3Service } from 'src/s3/s3.service';
+import { UploadsService } from 'src/uploads/uploads.service';
 
 @Injectable()
 export class ContentsService {
   constructor(
     @InjectModel(Content.name) private contentModel: Model<Content>,
-    private readonly s3Service: S3Service,
+    private readonly uploadsService: UploadsService,
   ) {}
 
   async create(createContentDto: CreateContentDto): Promise<Content> {
@@ -58,21 +58,23 @@ export class ContentsService {
   }
 
   async remove(id: string): Promise<Content> {
-    const deletedContent = await this.contentModel.findByIdAndDelete(id).exec();
-
-    if (!deletedContent) {
-      throw new NotFoundException(`Content with ID ${id} not found`);
-    }
+    const content = await this.findOne(id);
 
     // Delete associated S3 files
-    for (const block of deletedContent.blocks) {
+    for (const block of content.blocks) {
       if (block.type === 'image' || block.type === 'video') {
         try {
-          await this.s3Service.deleteFile(block.value);
+          await this.uploadsService.deleteFile(block.value);
         } catch (error) {
           console.error(`Failed to delete file ${block.value} from S3:`, error);
         }
       }
+    }
+
+    const deletedContent = await this.contentModel.findByIdAndDelete(id).exec();
+
+    if (!deletedContent) {
+      throw new NotFoundException(`Content with ID ${id} not found`);
     }
 
     return deletedContent;

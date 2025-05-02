@@ -27,7 +27,7 @@ export class CreateContentDto {
     
     @IsOptional()
     @IsMongoId()
-    createdBy?: string;
+    createdBy: string;
 }
 
 export class ContentBlockDto {
