@@ -1,7 +1,7 @@
 import { Dashboard, AccountCircle, Group, Book } from "@mui/icons-material";
 
 const navEditorConfig = [
-  { title: "Content", path: "/editor/content", icon: <Dashboard /> },
+  { title: "Content", path: "/editor/contents", icon: <Dashboard /> },
 ];
 
 const navAdminConfig = [

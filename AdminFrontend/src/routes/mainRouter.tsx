@@ -31,6 +31,9 @@ const UserListPage = Loadable(lazy(() => import("../pages/user/UserListPage")));
 const AdminContentPage = Loadable(
   lazy(() => import("../pages/content/AdminContentPage"))
 );
+const EditorContentPage = Loadable(
+  lazy(() => import("../pages/content/EditorContentPage"))
+);
 const CreateNewUserPage = Loadable(
   lazy(() => import("../pages/user/CreateNewUserPage"))
 );
@@ -79,7 +82,7 @@ export default function Router() {
           element: <AdminContentPage />,
         },
         {
-          path: "content/:id", 
+          path: "content/:id",
           element: <ContentDetailPage />,
         },
         {
@@ -103,10 +106,14 @@ export default function Router() {
           // element: <Navigate to="/admin/studentList" replace />,
           element: <TestPage />,
         },
-        // {
-        //   path: "course",
-        //   element: <TeacherCoursePage />,
-        // },
+        {
+          path: "contents",
+          element: <EditorContentPage />,
+        },
+        {
+          path: "content/:id",
+          element: <ContentDetailPage />,
+        },
       ],
     },
 

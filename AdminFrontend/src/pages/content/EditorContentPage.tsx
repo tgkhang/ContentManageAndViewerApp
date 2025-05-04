@@ -1,17 +1,26 @@
-import type React from "react"
-import { useEffect, useState } from "react"
-import Page from "../../components/Page"
-import { Box, Button, Card, CardContent, Container, Typography, CircularProgress, Alert } from "@mui/material"
-import AddIcon from "@mui/icons-material/Add"
-import useAuth from "../../hooks/useAuth"
-import type { Content } from "../../types/content"
-import { getAllContentsAPI } from "../../utils/api"
-import { useNavigate } from "react-router-dom"
-import type { ContentCardProps } from "../../types/content"
-import CreateContentModal from "../../components/CreateContentModal"
+import type React from "react";
+import { useEffect, useState } from "react";
+import Page from "../../components/Page";
+import {
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Container,
+  Typography,
+  CircularProgress,
+  Alert,
+} from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
+import useAuth from "../../hooks/useAuth";
+import type { Content } from "../../types/content";
+import { getContentByUserIdAPI } from "../../utils/api";
+import { useNavigate } from "react-router-dom";
+import type { ContentCardProps } from "../../types/content";
+import CreateContentModal from "../../components/CreateContentModal";
 
 const ContentCard: React.FC<ContentCardProps> = ({ content }) => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   return (
     <Card
       onClick={() => navigate(`/admin/content/${content.id}`)}
@@ -30,7 +39,11 @@ const ContentCard: React.FC<ContentCardProps> = ({ content }) => {
       <CardContent sx={{ p: 3 }}>
         <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
           {/* Title */}
-          <Typography variant="h6" color="primary" sx={{ fontWeight: "bold", fontSize: "1rem" }}>
+          <Typography
+            variant="h6"
+            color="primary"
+            sx={{ fontWeight: "bold", fontSize: "1rem" }}
+          >
             {content.title}
           </Typography>
 
@@ -46,60 +59,62 @@ const ContentCard: React.FC<ContentCardProps> = ({ content }) => {
         </Box>
       </CardContent>
     </Card>
-  )
-}
+  );
+};
 
 export default function AdminContentPage() {
-  const { user } = useAuth()
-  const [contents, setContents] = useState<Content[]>([])
-  const [loading, setLoading] = useState<boolean>(true)
-  const [error, setError] = useState<string | null>(null)
-  const [isFetching, setIsFetching] = useState<boolean>(false)
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState<boolean>(false)
+  const { user } = useAuth();
+  const [contents, setContents] = useState<Content[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+  const [isFetching, setIsFetching] = useState<boolean>(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
-    fetchContents()
-  }, [])
+    fetchContents();
+  }, []);
 
   const fetchContents = async () => {
-    if (isFetching) return
+    if (isFetching) return;
 
     try {
-      setIsFetching(true)
-      setLoading(true)
-      setError(null)
+      setIsFetching(true);
+      setLoading(true);
+      setError(null);
 
-      const response = await getAllContentsAPI()
-      console.log("Fetched contents:", response.data)
+      //const response = await getAllContentsAPI();
+      console.log(user?.id);
+      const response = await getContentByUserIdAPI(user?.id);
+      console.log("Fetched contents:", response.data);
 
       // Map _id to id
       setContents(
         response.data.map((item: any) => ({
           ...item,
           id: item._id,
-        })),
-      )
+        }))
+      );
     } catch (err) {
-      setError("Failed to load content. Please try again.")
-      console.error("Error fetching content:", err)
-      setContents([])
+      setError("Failed to load content. Please try again.");
+      console.error("Error fetching content:", err);
+      setContents([]);
     } finally {
-      setLoading(false)
-      setIsFetching(false)
+      setLoading(false);
+      setIsFetching(false);
     }
-  }
+  };
 
   const handleCreateClick = () => {
-    setIsCreateModalOpen(true)
-  }
+    setIsCreateModalOpen(true);
+  };
 
   const handleCreateSuccess = () => {
-    fetchContents()
-  }
+    fetchContents();
+  };
 
   return (
-    <Page title="Content Management">
-      <Container maxWidth="lg" sx={{ mt: 10}}>
+    <Page title="Editor Content">
+      <Container maxWidth="lg" sx={{ mt: 10 }}>
         <Box
           sx={{
             display: "flex",
@@ -109,9 +124,14 @@ export default function AdminContentPage() {
           }}
         >
           <Typography variant="h4" gutterBottom>
-            Content Management
+            Your Content Management
           </Typography>
-          <Button variant="contained" color="primary" startIcon={<AddIcon />} onClick={handleCreateClick}>
+          <Button
+            variant="contained"
+            color="primary"
+            startIcon={<AddIcon />}
+            onClick={handleCreateClick}
+          >
             Create New Content
           </Button>
         </Box>
@@ -143,5 +163,5 @@ export default function AdminContentPage() {
         />
       </Container>
     </Page>
-  )
+  );
 }

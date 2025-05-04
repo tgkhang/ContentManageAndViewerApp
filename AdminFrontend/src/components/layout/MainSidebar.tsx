@@ -172,7 +172,7 @@ export default function MainSideBar({
             }}
           >
             <Typography variant="h5" sx={{ color: "primary.lighter" }}>
-              {user?.email || "Unknown"}
+              {user?.name || "Unknown"}
             </Typography>
             <Typography
               variant="caption"

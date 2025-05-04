@@ -98,13 +98,13 @@ export default function Login() {
           }}
         >
           <Typography component="h1" variant="h5" sx={{ mb: 2 }}>
-            Admin Site
+            Client Site
           </Typography>
           <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Sign in as client
           </Typography>
 
           {error && (

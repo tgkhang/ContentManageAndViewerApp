@@ -58,7 +58,7 @@ export default function MainHeader(): React.ReactElement | null {
                       width: 40,
                       height: 40,
                       border: "2px solid",
-                      borderColor: "primary.main",
+                      //borderColor: "primary.main",
                       bgcolor: "primary.main",
                       color: "white",
                       fontWeight: "bold",

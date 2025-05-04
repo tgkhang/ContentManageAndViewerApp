@@ -76,6 +76,53 @@ export default function Router() {
         },
       ],
     },
+    {
+      path: "admin",
+      element: (
+        <AuthGuard>
+          <MainLayout />
+        </AuthGuard>
+      ),
+      children: [
+        {
+          path: "",
+          // element: <Navigate to="/admin/studentList" replace />,
+          element: <TestPage />,
+        },
+        {
+          path: "contents",
+          element: <ContentPage />,
+        },
+        {
+          path: "content/:id",
+          element: <ContentDetailPage />,
+        },
+      ],
+    },
+    {
+      path: "editor",
+      element: (
+        <AuthGuard>
+          <MainLayout />
+        </AuthGuard>
+      ),
+      children: [
+        {
+          path: "",
+          // element: <Navigate to="/admin/studentList" replace />,
+          element: <TestPage />,
+        },
+        {
+          path: "contents",
+          element: <ContentPage />,
+        },
+        {
+          path: "content/:id",
+          element: <ContentDetailPage />,
+        },
+      ],
+    },
+
     // Root redirect
     {
       path: "/",
