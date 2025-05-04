@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from 'src/users/users.service';
+import * as bcrypt from 'bcrypt';
 
 type AuthInput = { email: string; password: string };
 type SigninData = {
@@ -35,19 +36,31 @@ export class AuthService {
     try {
       const user = await this.usersService.findByEmail(input.email);
 
-      // hash 
+      // hash
+      const isMatch = await bcrypt.compare(
+        input.password,
+        user.password || '123123',
+      );
 
-      if (user && user.password === input.password) {
+      if (isMatch) {
         return {
           username: user.username,
-          userId: user._id.toString(), // Convert MongoDB ObjectId to string
+          userId: user._id.toString(),
           role: user.role,
         };
       }
+
+      // if (user && user.password === input.password) {
+      //   return {
+      //     username: user.username,
+      //     userId: user._id.toString(), // Convert MongoDB ObjectId to string
+      //     role: user.role,
+      //   };
+      // }
       return null;
     } catch (err) {
       console.log(err);
-      return null; 
+      return null;
     }
   }
 
