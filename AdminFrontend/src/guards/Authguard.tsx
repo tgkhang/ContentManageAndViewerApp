@@ -1,22 +1,17 @@
-import { ReactNode, useState, useEffect } from 'react';
+import { ReactNode, useState } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
 import LoadingScreen from '../components/LoadingScreen';
 import useAuth from '../hooks/useAuth';
+import Login from '../pages/authentication/Login';
 
 interface AuthGuardProps {
   children: ReactNode;
 }
 
 export default function AuthGuard({ children }: AuthGuardProps) {
-  const { isAuthenticated, isInitialized } = useAuth();
+  const { isAuthenticated, isInitialized, user } = useAuth();
   const { pathname } = useLocation();
   const [requestedLocation, setRequestedLocation] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (requestedLocation && pathname !== requestedLocation) {
-      setRequestedLocation(null);
-    }
-  }, [pathname, requestedLocation]);
 
   if (!isInitialized) {
     return <LoadingScreen />;
@@ -26,13 +21,17 @@ export default function AuthGuard({ children }: AuthGuardProps) {
     if (pathname !== requestedLocation) {
       setRequestedLocation(pathname);
     }
-    return <Navigate to="/auth/login" />;
+    return <Login/>;
   }
 
   if (requestedLocation && pathname !== requestedLocation) {
     setRequestedLocation(null);
     return <Navigate to={requestedLocation} />;
   }
+  // else if (!pathname.includes(user)) {
+  //   //return <Page404 />;
+  //   return <TestPage />;
+  // }
 
   return <>{children}</>;
 }

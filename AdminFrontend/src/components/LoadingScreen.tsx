@@ -1,13 +1,24 @@
-import React from 'react';
+import React from "react";
+import { CircularProgress, Typography, Box } from "@mui/material";
 
-export default function LoadingScreen() {
+const LoadingScreen: React.FC = () => {
   return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="text-center">
-        <div className="w-12 h-12 border-4 border-t-blue-500 border-gray-200 rounded-full animate-spin mx-auto mb-4"></div>
-        <h2 className="text-xl font-semibold mb-2">Loading...</h2>
-        <p className="text-gray-500">Please wait while we prepare your dashboard</p>
-      </div>
-    </div>
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      minHeight="100vh"
+      flexDirection="column"
+    >
+      <CircularProgress size={48} thickness={4} color="primary" />
+      <Typography variant="h6" sx={{ mt: 2 }}>
+        Loading...
+      </Typography>
+      <Typography variant="body2" color="textSecondary">
+        Please wait while we prepare your website.
+      </Typography>
+    </Box>
   );
-}
+};
+
+export default LoadingScreen;

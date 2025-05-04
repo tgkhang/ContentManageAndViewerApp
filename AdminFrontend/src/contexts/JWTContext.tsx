@@ -2,8 +2,6 @@ import { createContext, useEffect, useReducer, ReactNode } from "react";
 import { isValidToken, setSession } from "../utils/jwt";
 import { validateAPI } from "../utils/api";
 
-// ----------------------------------------------------------------------
-
 interface User {
   id: string;
   name: string;
@@ -12,8 +10,8 @@ interface User {
 }
 
 interface AuthState {
-  isAuthenticated: boolean;
-  isInitialized: boolean;
+  isAuthenticated: boolean; //login status
+  isInitialized: boolean; //delay rendering until the check is complete
   user: User | null;
 }
 
@@ -23,12 +21,14 @@ const initialState: AuthState = {
   user: null,
 };
 
-// Action Types
+// Action Types reducer handle
 type AuthAction =
+  //fisrt load
   | {
       type: "INITIALIZE";
       payload: { isAuthenticated: boolean; user: User | null };
     }
+  //    after login
   | {
       type: "LOGIN";
       payload: { user: User };
@@ -37,9 +37,10 @@ type AuthAction =
       type: "LOGOUT";
     };
 
+//map of action types to functions
 const handlers: Record<
   AuthAction["type"],
-  (state: AuthState, action: AuthAction) => AuthState
+  (state: AuthState, action: AuthAction) => AuthState //function take state and action and return new state
 > = {
   INITIALIZE: (state, action) => {
     if (action.type !== "INITIALIZE") return state;

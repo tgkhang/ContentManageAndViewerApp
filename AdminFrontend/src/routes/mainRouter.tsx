@@ -1,4 +1,4 @@
-import { Navigate, useRoutes } from "react-router-dom";
+import { Navigate, useRoutes } from "react-router";
 import { lazy, Suspense } from "react";
 import GuestGuard from "../guards/GuestGuard";
 import LoadingScreen from "../components/LoadingScreen";
@@ -13,7 +13,7 @@ const Loadable = (Component: any) => {
       </Suspense>
     );
   };
-
+  //debugging
   WrappedComponent.displayName = `Loadable(${Component.name || "Component"})`;
   return WrappedComponent;
 };
@@ -94,7 +94,7 @@ export default function Router() {
       element: <Navigate to="/auth/login" replace />,
     },
 
-    // 404 and catch all
+    // 404 
     {
       path: "*",
       element: <Navigate to="/auth/login" replace />,
