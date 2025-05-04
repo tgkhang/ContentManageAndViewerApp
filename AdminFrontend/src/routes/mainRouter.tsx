@@ -27,6 +27,13 @@ const MainLayout = Loadable(
 );
 
 const TestPage = Loadable(lazy(() => import("../pages/user/TestPage")));
+const UserListPage = Loadable(lazy(() => import("../pages/user/UserListPage")));
+const AdminContentPage = Loadable(
+  lazy(() => import("../pages/content/AdminContentPage"))
+);
+const CreateNewUserPage = Loadable(
+  lazy(() => import("../pages/user/CreateNewUserPage"))
+);
 
 export default function Router() {
   return useRoutes([
@@ -60,10 +67,18 @@ export default function Router() {
           // element: <Navigate to="/admin/studentList" replace />,
           element: <TestPage />,
         },
-        // {
-        //   path: "studentList",
-        //   element: <StudentListPage />,
-        // },
+        {
+          path: "users",
+          element: <UserListPage />,
+        },
+        {
+          path: "contents",
+          element: <AdminContentPage />,
+        },
+        {
+          path: "createUser",
+          element: <CreateNewUserPage />,
+        },
       ],
     },
 
@@ -94,7 +109,7 @@ export default function Router() {
       element: <Navigate to="/auth/login" replace />,
     },
 
-    // 404 
+    // 404
     {
       path: "*",
       element: <Navigate to="/auth/login" replace />,
