@@ -103,7 +103,7 @@ export default function UserListPage() {
       username: user.username,
       email: user.email,
       role: user.role,
-      updatedBy: user._id
+      updatedBy: user._id,
     });
     setEditDialogOpen(true);
   };
@@ -181,7 +181,10 @@ export default function UserListPage() {
     <Page title="User Management">
       <Container maxWidth="lg" sx={{ mt: 10 }}>
         <Box sx={{ my: 4 }}>
-          <Typography variant="h4" gutterBottom>
+          <Typography
+            variant="h4"
+            sx={{ fontWeight: 600, color: "primary.main" }}
+          >
             User List
           </Typography>
         </Box>
@@ -202,7 +205,7 @@ export default function UserListPage() {
           /* User Table */
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="user table">
-              <TableHead>
+              <TableHead >
                 <TableRow>
                   <TableCell>Name</TableCell>
                   <TableCell>Username</TableCell>

@@ -34,6 +34,9 @@ const AdminContentPage = Loadable(
 const CreateNewUserPage = Loadable(
   lazy(() => import("../pages/user/CreateNewUserPage"))
 );
+const ContentDetailPage = Loadable(
+  lazy(() => import("../pages/content/ContainDetailPage"))
+);
 
 export default function Router() {
   return useRoutes([
@@ -74,6 +77,10 @@ export default function Router() {
         {
           path: "contents",
           element: <AdminContentPage />,
+        },
+        {
+          path: "content/:id", 
+          element: <ContentDetailPage />,
         },
         {
           path: "createUser",
