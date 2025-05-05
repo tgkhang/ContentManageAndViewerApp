@@ -8,8 +8,6 @@ import {
   IconButton,
   Toolbar,
   Typography,
-  useTheme,
-  useMediaQuery,
 } from "@mui/material";
 import ProfileMenu from "../ProfileMenu";
 import { styled } from "@mui/material/styles";
@@ -36,8 +34,6 @@ export default function MainHeader(): React.ReactElement | null {
   const { user, isAuthenticated } = useAuth();
   const [openProfileMenu, setOpenProfileMenu] = useState<boolean>(false);
   const [anchorProfile, setAnchorProfile] = useState<HTMLElement | null>(null);
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleToggleProfileMenu = (event: any) => {
     setAnchorProfile(event.currentTarget);
@@ -50,22 +46,22 @@ export default function MainHeader(): React.ReactElement | null {
 
   return (
     <HeaderStyle position="fixed">
-      <Toolbar 
-        sx={{ 
+      <Toolbar
+        sx={{
           px: { xs: 2, sm: 3.5 },
           minHeight: { xs: 56, sm: 64 },
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between'
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
         }}
       >
-        <Typography 
-          sx={{ 
-            flexGrow: 1, 
-            fontWeight: 700, 
-            fontSize: { xs: '1.2rem', sm: '1.5rem' },
-            color: 'primary.main',
-            letterSpacing: '0.5px'
+        <Typography
+          sx={{
+            flexGrow: 1,
+            fontWeight: 700,
+            fontSize: { xs: "1.2rem", sm: "1.5rem" },
+            color: "primary.main",
+            letterSpacing: "0.5px",
           }}
         >
           Contents
@@ -74,12 +70,12 @@ export default function MainHeader(): React.ReactElement | null {
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <ClickAwayListener onClickAway={handleCloseProfileMenu}>
               <Box>
-                <IconButton 
+                <IconButton
                   onClick={handleToggleProfileMenu}
                   sx={{
-                    '&:hover': {
-                      backgroundColor: 'rgba(0, 0, 0, 0.04)'
-                    }
+                    "&:hover": {
+                      backgroundColor: "rgba(0, 0, 0, 0.04)",
+                    },
                   }}
                 >
                   <Avatar
@@ -92,11 +88,11 @@ export default function MainHeader(): React.ReactElement | null {
                       color: "white",
                       fontWeight: "bold",
                       fontSize: { xs: 14, sm: 18 },
-                      transition: 'all 0.2s ease-in-out',
-                      '&:hover': {
-                        transform: 'scale(1.05)',
-                        boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
-                      }
+                      transition: "all 0.2s ease-in-out",
+                      "&:hover": {
+                        transform: "scale(1.05)",
+                        boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+                      },
                     }}
                   >
                     {user?.name?.charAt(0) || ""}

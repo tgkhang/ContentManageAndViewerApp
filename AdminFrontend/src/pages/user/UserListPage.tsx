@@ -44,8 +44,6 @@ interface User {
 }
 
 export default function UserListPage() {
-  const { user } = useAuth();
-
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

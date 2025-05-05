@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { createUserAPI } from "../../utils/api";
 import Page from "../../components/Page";
 import {
@@ -46,12 +46,14 @@ export default function CreateNewUserPage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [role, setRole] = useState<string>("client");
-  
+
   // UI state
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showSnackbar, setShowSnackbar] = useState<boolean>(false);
   const [snackbarMessage, setSnackbarMessage] = useState<string>("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error" | "info" | "warning">("success");
+  const [snackbarSeverity, setSnackbarSeverity] = useState<
+    "success" | "error" | "info" | "warning"
+  >("success");
 
   const handleCloseSnackbar = () => {
     setShowSnackbar(false);
@@ -135,7 +137,7 @@ export default function CreateNewUserPage() {
           </Typography>
         </Box>
         <Divider sx={{ mb: 4 }} />
-        
+
         {/* Personal Information Section */}
         <Typography
           variant="h6"
@@ -146,7 +148,7 @@ export default function CreateNewUserPage() {
         </Typography>
 
         <Grid container spacing={3} sx={{ mb: 4 }}>
-          <Grid item xs={12} sm={6}>
+          <Grid>
             <TextField
               required
               fullWidth
@@ -158,7 +160,7 @@ export default function CreateNewUserPage() {
               variant="outlined"
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid>
             <TextField
               required
               fullWidth
@@ -170,7 +172,7 @@ export default function CreateNewUserPage() {
               variant="outlined"
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid>
             <TextField
               required
               fullWidth
@@ -183,7 +185,7 @@ export default function CreateNewUserPage() {
               variant="outlined"
             />
           </Grid>
-          <Grid item xs={12} sm={6}>
+          <Grid>
             <FormControl fullWidth required>
               <InputLabel id="role-label">Role</InputLabel>
               <Select
@@ -211,23 +213,20 @@ export default function CreateNewUserPage() {
         </Typography>
 
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={6}>
-            <TextField
-              required
-              fullWidth
-              id="password"
-              name="password"
-              label="Password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              variant="outlined"
-            />
-          </Grid>
+          <TextField
+            required
+            id="password"
+            name="password"
+            label="Password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            variant="outlined"
+          />
         </Grid>
 
         <Divider sx={{ my: 4 }} />
-        
+
         {/* Submit Buttons */}
         <Box sx={{ display: "flex", justifyContent: "space-between", mt: 4 }}>
           <Button
@@ -262,7 +261,7 @@ export default function CreateNewUserPage() {
           </Button>
         </Box>
       </Paper>
-      
+
       {/* Notification Snackbar */}
       <Snackbar
         open={showSnackbar}

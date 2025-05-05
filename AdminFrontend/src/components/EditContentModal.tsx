@@ -143,7 +143,7 @@ const EditContentModal: React.FC<EditContentModalProps> = ({
         blocks,
       };
 
-      await updateContentAPI(content.id, contentData);
+      await updateContentAPI(content._id, contentData);
 
       // Reset errors and close modal
       setErrors({});
@@ -266,7 +266,7 @@ const EditContentModal: React.FC<EditContentModalProps> = ({
             )}
 
             <Grid container spacing={2} sx={{ mb: 2 }}>
-              <Grid item>
+              <Grid>
                 <Button
                   variant="outlined"
                   startIcon={<TextFieldsIcon />}
@@ -276,7 +276,7 @@ const EditContentModal: React.FC<EditContentModalProps> = ({
                   Add Text
                 </Button>
               </Grid>
-              <Grid item>
+              <Grid>
                 <Button
                   variant="outlined"
                   startIcon={<ImageIcon />}
@@ -295,7 +295,7 @@ const EditContentModal: React.FC<EditContentModalProps> = ({
                   )}
                 </Button>
               </Grid>
-              <Grid item>
+              <Grid>
                 <Button
                   variant="outlined"
                   startIcon={<VideocamIcon />}

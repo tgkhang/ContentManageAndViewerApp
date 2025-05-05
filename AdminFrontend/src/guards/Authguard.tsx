@@ -9,7 +9,7 @@ interface AuthGuardProps {
 }
 
 export default function AuthGuard({ children }: AuthGuardProps) {
-  const { isAuthenticated, isInitialized, user } = useAuth();
+  const { isAuthenticated, isInitialized } = useAuth();
   const { pathname } = useLocation();
   const [requestedLocation, setRequestedLocation] = useState<string | null>(null);
 

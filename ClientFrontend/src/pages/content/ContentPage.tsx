@@ -10,7 +10,6 @@ import {
   CircularProgress,
   Alert,
 } from "@mui/material";
-import useAuth from "../../hooks/useAuth";
 import type { Content } from "../../types/content";
 import { getAllContentsAPI } from "../../utils/api";
 import { useNavigate } from "react-router-dom";
@@ -61,12 +60,10 @@ const ContentCard: React.FC<ContentCardProps> = ({ content }) => {
 };
 
 export default function AdminContentPage() {
-  const { user } = useAuth();
   const [contents, setContents] = useState<Content[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [isFetching, setIsFetching] = useState<boolean>(false);
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState<boolean>(false);
 
   useEffect(() => {
     fetchContents();
@@ -76,8 +73,10 @@ export default function AdminContentPage() {
 
     // Handle content updates
     const handleContentUpdate = (updatedContent: Content) => {
-      setContents(prevContents => {
-        const index = prevContents.findIndex(c => c._id === updatedContent._id);
+      setContents((prevContents) => {
+        const index = prevContents.findIndex(
+          (c) => c._id === updatedContent._id
+        );
         if (index !== -1) {
           const newContents = [...prevContents];
           newContents[index] = updatedContent;
@@ -89,7 +88,9 @@ export default function AdminContentPage() {
 
     // Handle content deletion
     const handleContentDeleted = (contentId: string) => {
-      setContents(prevContents => prevContents.filter(c => c._id !== contentId));
+      setContents((prevContents) =>
+        prevContents.filter((c) => c._id !== contentId)
+      );
     };
 
     websocketService.onContentUpdate(handleContentUpdate);

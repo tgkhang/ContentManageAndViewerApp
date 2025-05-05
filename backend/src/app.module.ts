@@ -15,14 +15,9 @@ import { ContentsGateway } from './contents/contents.gateway';
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      //envFilePath: '.env',
     }),
     UsersModule,
     AuthModule,
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
-    //MongooseModule.forRoot(process.env.MONGODB_URI!),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

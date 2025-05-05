@@ -23,7 +23,7 @@ const ContentCard: React.FC<ContentCardProps> = ({ content }) => {
   const navigate = useNavigate();
   return (
     <Card
-      onClick={() => navigate(`/admin/content/${content.id}`)}
+      onClick={() => navigate(`/admin/content/${content._id}`)}
       sx={{
         mb: 2,
         boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.05)",
@@ -84,7 +84,7 @@ export default function AdminContentPage() {
 
       //const response = await getAllContentsAPI();
       console.log(user?.id);
-      const response = await getContentByUserIdAPI(user?.id);
+      const response = await getContentByUserIdAPI(user?.id|| "1");
       console.log("Fetched contents:", response.data);
 
       // Map _id to id
@@ -147,7 +147,7 @@ export default function AdminContentPage() {
             <CircularProgress />
           </Box>
         ) : contents.length > 0 ? (
-          contents.map((item) => <ContentCard key={item.id} content={item} />)
+          contents.map((item) => <ContentCard key={item._id} content={item} />)
         ) : (
           <Box sx={{ textAlign: "center", my: 4 }}>
             <Typography variant="body1" color="text.secondary">

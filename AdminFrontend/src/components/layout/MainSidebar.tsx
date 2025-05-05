@@ -49,7 +49,7 @@ const ListItemIconStyle = styled(ListItemIcon)(({ theme }) => ({
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  transition: theme.transitions.create(['width', 'height'], {
+  transition: theme.transitions.create(["width", "height"], {
     duration: theme.transitions.duration.shorter,
   }),
 }));
@@ -57,7 +57,6 @@ const ListItemIconStyle = styled(ListItemIcon)(({ theme }) => ({
 // Navigation Item Component
 function NavItem({ item, isOpenSidebar }: NavItemProps): React.ReactElement {
   const { title, path, icon } = item;
-  const theme = useTheme();
 
   const listItemButton = (
     <ListItemButton
@@ -124,7 +123,7 @@ export default function MainSideBar({
 }: MainSideBarProps): React.ReactElement {
   const { user } = useContext(AuthContext);
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
+  const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
   const navConfig = user?.role === "admin" ? navAdminConfig : navEditorConfig;
 
   const renderContent = (
@@ -140,13 +139,13 @@ export default function MainSideBar({
         }}
       >
         {isOpenSidebar ? (
-          <IconButton 
-            onClick={onToggleSidebar} 
+          <IconButton
+            onClick={onToggleSidebar}
             color="primary"
             sx={{
-              '&:hover': {
-                backgroundColor: 'rgba(0, 0, 0, 0.04)'
-              }
+              "&:hover": {
+                backgroundColor: "rgba(0, 0, 0, 0.04)",
+              },
             }}
           >
             <MenuIcon />
@@ -159,17 +158,17 @@ export default function MainSideBar({
                 fontWeight: 700,
                 fontSize: "1.2rem",
                 color: "primary.main",
-                letterSpacing: '0.5px'
+                letterSpacing: "0.5px",
               }}
             >
               Admin Panel
             </Typography>
-            <IconButton 
+            <IconButton
               onClick={onToggleSidebar}
               sx={{
-                '&:hover': {
-                  backgroundColor: 'rgba(0, 0, 0, 0.04)'
-                }
+                "&:hover": {
+                  backgroundColor: "rgba(0, 0, 0, 0.04)",
+                },
               }}
             >
               <MenuIcon />
@@ -213,7 +212,10 @@ export default function MainSideBar({
               justifyContent: "flex-start",
             }}
           >
-            <Typography variant="subtitle1" sx={{ color: "primary.main", fontWeight: 600 }}>
+            <Typography
+              variant="subtitle1"
+              sx={{ color: "primary.main", fontWeight: 600 }}
+            >
               {user?.name || "Unknown"}
             </Typography>
             <Typography

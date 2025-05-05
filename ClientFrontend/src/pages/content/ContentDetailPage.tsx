@@ -36,7 +36,7 @@ export default function ContentDetailPage() {
 
     const handleContentUpdate = (updatedContent: Content) => {
       if (updatedContent._id === id) {
-        setContent({ ...updatedContent, id: updatedContent._id })
+        setContent({ ...updatedContent })
       }
     }
 

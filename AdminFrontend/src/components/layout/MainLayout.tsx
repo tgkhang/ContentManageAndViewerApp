@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
-import useAuth from "../../hooks/useAuth";
+import { Outlet } from "react-router-dom";
 import { Box, styled, useTheme, useMediaQuery } from "@mui/material";
 import MainHeader from "./MainHeader";
 import MainSideBar from "./MainSidebar";
@@ -22,9 +21,8 @@ const MainStyle = styled("main")(({ theme }) => ({
 }));
 
 export default function MainLayout(): React.ReactElement | null {
-  const { user } = useAuth();
   const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
+  const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
   const [isCollapse, setCollapse] = useState<boolean>(!isMobile);
 
   useEffect(() => {

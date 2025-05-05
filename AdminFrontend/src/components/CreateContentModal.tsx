@@ -10,10 +10,10 @@ import {
   TextField,
   Typography,
   IconButton,
-  Grid,
   Paper,
   CircularProgress,
 } from "@mui/material";
+import Grid from "@mui/material/Grid";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ImageIcon from "@mui/icons-material/Image";
@@ -258,7 +258,7 @@ const CreateContentModal: React.FC<CreateContentModalProps> = ({
             )}
 
             <Grid container spacing={2} sx={{ mb: 2 }}>
-              <Grid item>
+              <Grid>
                 <Button
                   variant="outlined"
                   startIcon={<TextFieldsIcon />}
@@ -268,7 +268,7 @@ const CreateContentModal: React.FC<CreateContentModalProps> = ({
                   Add Text
                 </Button>
               </Grid>
-              <Grid item>
+              <Grid>
                 <Button
                   variant="outlined"
                   startIcon={<ImageIcon />}
@@ -287,7 +287,7 @@ const CreateContentModal: React.FC<CreateContentModalProps> = ({
                   )}
                 </Button>
               </Grid>
-              <Grid item>
+              <Grid>
                 <Button
                   variant="outlined"
                   startIcon={<VideocamIcon />}
