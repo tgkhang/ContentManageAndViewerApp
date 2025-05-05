@@ -12,6 +12,8 @@ import {
   ListItemButton,
   IconButton,
   Tooltip,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 // icons
@@ -37,21 +39,25 @@ interface MainSideBarProps {
 }
 
 // Constants
-const DRAWER_WIDTH = 250;
-const COLLAPSED_WIDTH = 85;
+const DRAWER_WIDTH = 280;
+const COLLAPSED_WIDTH = 88;
 
-const ListItemIconStyle = styled(ListItemIcon)({
-  width: 22,
-  height: 22,
+const ListItemIconStyle = styled(ListItemIcon)(({ theme }) => ({
+  width: 24,
+  height: 24,
   color: "inherit",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-});
+  transition: theme.transitions.create(['width', 'height'], {
+    duration: theme.transitions.duration.shorter,
+  }),
+}));
 
 // Navigation Item Component
 function NavItem({ item, isOpenSidebar }: NavItemProps): React.ReactElement {
   const { title, path, icon } = item;
+  const theme = useTheme();
 
   const listItemButton = (
     <ListItemButton
@@ -62,26 +68,41 @@ function NavItem({ item, isOpenSidebar }: NavItemProps): React.ReactElement {
         position: "relative",
         textTransform: "capitalize",
         color: "text.secondary",
+        borderRadius: 1,
+        mx: 1,
+        my: 0.5,
         "&.active": {
-          color: "white",
-          bgcolor: "primary.main",
+          color: "primary.main",
+          bgcolor: "primary.lighter",
           fontWeight: "fontWeightBold",
+          "&:before": {
+            content: '""',
+            width: 4,
+            height: "100%",
+            position: "absolute",
+            left: 0,
+            top: 0,
+            bgcolor: "primary.main",
+            borderRadius: "0 4px 4px 0",
+          },
         },
         "&:hover": {
           bgcolor: "action.hover",
           color: "primary.main",
         },
         justifyContent: isOpenSidebar ? "center" : "flex-start",
-        px: 0,
-        py: "1.75em",
+        px: 2,
+        py: 1.5,
       }}
     >
       <ListItemIconStyle>{icon}</ListItemIconStyle>
       {!isOpenSidebar && (
         <ListItemText
-          disableTypography
           primary={title}
-          sx={{ textTransform: "capitalize" }}
+          primaryTypographyProps={{
+            fontSize: 14,
+            fontWeight: "medium",
+          }}
         />
       )}
     </ListItemButton>
@@ -102,6 +123,8 @@ export default function MainSideBar({
   onToggleSidebar,
 }: MainSideBarProps): React.ReactElement {
   const { user } = useContext(AuthContext);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
   const navConfig = user?.role === "admin" ? navAdminConfig : navEditorConfig;
 
   const renderContent = (
@@ -117,7 +140,15 @@ export default function MainSideBar({
         }}
       >
         {isOpenSidebar ? (
-          <IconButton onClick={onToggleSidebar} color="primary">
+          <IconButton 
+            onClick={onToggleSidebar} 
+            color="primary"
+            sx={{
+              '&:hover': {
+                backgroundColor: 'rgba(0, 0, 0, 0.04)'
+              }
+            }}
+          >
             <MenuIcon />
           </IconButton>
         ) : (
@@ -128,20 +159,28 @@ export default function MainSideBar({
                 fontWeight: 700,
                 fontSize: "1.2rem",
                 color: "primary.main",
+                letterSpacing: '0.5px'
               }}
             >
-              Workplace
+              Admin Panel
             </Typography>
-            <IconButton onClick={onToggleSidebar}>
+            <IconButton 
+              onClick={onToggleSidebar}
+              sx={{
+                '&:hover': {
+                  backgroundColor: 'rgba(0, 0, 0, 0.04)'
+                }
+              }}
+            >
               <MenuIcon />
             </IconButton>
           </>
         )}
       </Box>
 
-      <Divider sx={{ borderStyle: "dashed" }} />
+      <Divider sx={{ borderStyle: "dashed", mx: 2 }} />
 
-      <List disablePadding>
+      <List disablePadding sx={{ px: 1, py: 1 }}>
         {navConfig.map((item) => (
           <NavItem key={item.title} item={item} isOpenSidebar={isOpenSidebar} />
         ))}
@@ -150,13 +189,16 @@ export default function MainSideBar({
       {/* Spacer to push the user profile to the bottom */}
       <Box sx={{ flexGrow: 1 }} />
 
-      <Divider sx={{ mt: 2 }} />
+      <Divider sx={{ mt: 2, mx: 2 }} />
 
       {/* User Profile Section */}
       <Box
         sx={{
           p: 2,
-          backgroundColor: "primary.main",
+          mx: 1,
+          my: 1,
+          borderRadius: 1,
+          backgroundColor: "primary.lighter",
           display: "flex",
           alignItems: "center",
           gap: "1em",
@@ -171,12 +213,12 @@ export default function MainSideBar({
               justifyContent: "flex-start",
             }}
           >
-            <Typography variant="h5" sx={{ color: "primary.lighter" }}>
+            <Typography variant="subtitle1" sx={{ color: "primary.main", fontWeight: 600 }}>
               {user?.name || "Unknown"}
             </Typography>
             <Typography
               variant="caption"
-              sx={{ color: "primary.lighter", textTransform: "capitalize" }}
+              sx={{ color: "text.secondary", textTransform: "capitalize" }}
             >
               {user?.role || "unknown"}
             </Typography>
@@ -188,20 +230,18 @@ export default function MainSideBar({
 
   return (
     <Drawer
-      open={true}
-      variant="permanent"
+      open={!isMobile}
+      variant={isMobile ? "temporary" : "permanent"}
       sx={{
         width: isOpenSidebar ? COLLAPSED_WIDTH : DRAWER_WIDTH,
-        transition: (theme) =>
-          theme.transitions.create("width", {
-            duration: theme.transitions.duration.standard,
-          }),
+        transition: theme.transitions.create("width", {
+          duration: theme.transitions.duration.standard,
+        }),
         "& .MuiDrawer-paper": {
           width: isOpenSidebar ? COLLAPSED_WIDTH : DRAWER_WIDTH,
-          transition: (theme) =>
-            theme.transitions.create("width", {
-              duration: theme.transitions.duration.standard,
-            }),
+          transition: theme.transitions.create("width", {
+            duration: theme.transitions.duration.standard,
+          }),
           bgcolor: "background.default",
           position: "fixed",
           height: "calc(100vh - 64px)",
@@ -210,6 +250,7 @@ export default function MainSideBar({
           overflowX: "hidden",
           display: "flex",
           flexDirection: "column",
+          borderRight: "none",
         },
       }}
     >

@@ -8,6 +8,8 @@ import {
   IconButton,
   Toolbar,
   Typography,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
 import ProfileMenu from "../ProfileMenu";
 import { styled } from "@mui/material/styles";
@@ -15,6 +17,8 @@ import { styled } from "@mui/material/styles";
 const HeaderStyle = styled(AppBar)(({ theme }) => ({
   width: "100%",
   zIndex: theme.zIndex.drawer + 1,
+  backgroundColor: theme.palette.background.paper,
+  boxShadow: "0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)",
   transition: theme.transitions.create(["width", "margin"], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
@@ -32,6 +36,8 @@ export default function MainHeader(): React.ReactElement | null {
   const { user, isAuthenticated } = useAuth();
   const [openProfileMenu, setOpenProfileMenu] = useState<boolean>(false);
   const [anchorProfile, setAnchorProfile] = useState<HTMLElement | null>(null);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const handleToggleProfileMenu = (event: any) => {
     setAnchorProfile(event.currentTarget);
@@ -44,28 +50,55 @@ export default function MainHeader(): React.ReactElement | null {
 
   return (
     <HeaderStyle position="fixed">
-      <Toolbar sx={{ px: { xs: 2, sm: 3.5 } }}>
-        <Typography sx={{ flexGrow: 1, fontWeight: 700, fontSize: "1.5rem" }}>
+      <Toolbar 
+        sx={{ 
+          px: { xs: 2, sm: 3.5 },
+          minHeight: { xs: 56, sm: 64 },
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between'
+        }}
+      >
+        <Typography 
+          sx={{ 
+            flexGrow: 1, 
+            fontWeight: 700, 
+            fontSize: { xs: '1.2rem', sm: '1.5rem' },
+            color: 'primary.main',
+            letterSpacing: '0.5px'
+          }}
+        >
           Blog Management System
         </Typography>
         {isAuthenticated && (
           <Box sx={{ display: "flex", alignItems: "center" }}>
             <ClickAwayListener onClickAway={handleCloseProfileMenu}>
               <Box>
-                <IconButton onClick={handleToggleProfileMenu}>
+                <IconButton 
+                  onClick={handleToggleProfileMenu}
+                  sx={{
+                    '&:hover': {
+                      backgroundColor: 'rgba(0, 0, 0, 0.04)'
+                    }
+                  }}
+                >
                   <Avatar
                     sx={{
-                      width: 40,
-                      height: 40,
+                      width: { xs: 32, sm: 40 },
+                      height: { xs: 32, sm: 40 },
                       border: "2px solid",
-                      //borderColor: "primary.main",
+                      borderColor: "primary.main",
                       bgcolor: "primary.main",
                       color: "white",
                       fontWeight: "bold",
-                      fontSize: 18,
+                      fontSize: { xs: 14, sm: 18 },
+                      transition: 'all 0.2s ease-in-out',
+                      '&:hover': {
+                        transform: 'scale(1.05)',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+                      }
                     }}
                   >
-                  
                     {user?.name?.charAt(0) || ""}
                   </Avatar>
                 </IconButton>
