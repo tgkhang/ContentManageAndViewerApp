@@ -9,8 +9,8 @@ import { ContentsModule } from './contents/contents.module';
 import { MulterModule } from '@nestjs/platform-express';
 import { S3Module } from './s3/s3.module';
 import { UploadsModule } from './uploads/uploads.module';
-
-
+import { ContentsGateway } from './contents/contents.gateway';
+ 
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -40,6 +40,6 @@ import { UploadsModule } from './uploads/uploads.module';
     UploadsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, ContentsGateway],
 })
 export class AppModule {}
