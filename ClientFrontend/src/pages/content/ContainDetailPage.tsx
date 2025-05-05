@@ -8,6 +8,7 @@ import {
 import { getContentByIdAPI } from "../../utils/api";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { websocketService } from "../../services/websocket.service";
 
 export default function ContentDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -19,7 +20,7 @@ export default function ContentDetailPage() {
     const fetchContent = async () => {
       try {
         const res = await getContentByIdAPI(id);
-        setContent({ ...res.data, id: res.data._id });
+        setContent(res.data);
       } catch (err) {
         console.error("Failed to fetch content", err);
       } finally {
@@ -28,7 +29,23 @@ export default function ContentDetailPage() {
     };
 
     fetchContent();
+
+    websocketService.connect();
+    websocketService.joinContentRoom(id);
+
+    const handleContentUpdate = (updatedContent: Content) => {
+      if (updatedContent._id === id) {
+        setContent(updatedContent);
+      }
+    };
+
+    websocketService.onContentUpdate(handleContentUpdate);
+    return () => {
+      websocketService.leaveContentRoom(id);
+      websocketService.removeContentUpdateListener(handleContentUpdate);
+    };
   }, [id]);
+
   return (
     <Page title="Content Detail">
       <Box

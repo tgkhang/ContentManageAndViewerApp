@@ -1,3 +1,5 @@
+import { User } from "./user";
+
 export enum BlockType {
   TEXT = "text",
   IMAGE = "image",
@@ -11,6 +13,17 @@ export interface ContentBlock {
   metadata?: Record<string, any>;
 }
 
+export interface Content {
+  _id: string;
+  title: string;
+  description?: string;
+  blocks: ContentBlock[];
+  createdBy: User;
+  updatedBy?: User;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface CreateContentDto {
   title: string;
   description?: string;
@@ -21,16 +34,6 @@ export interface CreateContentDto {
 export type UpdateContentDto = Partial<Omit<CreateContentDto, "createdBy">> & {
   updatedBy?: string;
 };
-
-export interface Content {
-  id: string;
-  title: string;
-  description?: string;
-  blocks: ContentBlock[];
-  createdBy?: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
 
 export interface ContentCardProps {
   content: Content;

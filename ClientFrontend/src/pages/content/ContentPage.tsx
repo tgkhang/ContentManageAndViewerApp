@@ -15,12 +15,13 @@ import type { Content } from "../../types/content";
 import { getAllContentsAPI } from "../../utils/api";
 import { useNavigate } from "react-router-dom";
 import type { ContentCardProps } from "../../types/content";
+import { websocketService } from "../../services/websocket.service";
 
 const ContentCard: React.FC<ContentCardProps> = ({ content }) => {
   const navigate = useNavigate();
   return (
     <Card
-      onClick={() => navigate(`/client/content/${content.id}`)}
+      onClick={() => navigate(`/client/content/${content._id}`)}
       sx={{
         mb: 2,
         boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.05)",
@@ -69,6 +70,36 @@ export default function AdminContentPage() {
 
   useEffect(() => {
     fetchContents();
+
+    // Set up WebSocket connection and listeners
+    websocketService.connect();
+
+    // Handle content updates
+    const handleContentUpdate = (updatedContent: Content) => {
+      setContents(prevContents => {
+        const index = prevContents.findIndex(c => c._id === updatedContent._id);
+        if (index !== -1) {
+          const newContents = [...prevContents];
+          newContents[index] = updatedContent;
+          return newContents;
+        }
+        return [...prevContents, updatedContent];
+      });
+    };
+
+    // Handle content deletion
+    const handleContentDeleted = (contentId: string) => {
+      setContents(prevContents => prevContents.filter(c => c._id !== contentId));
+    };
+
+    websocketService.onContentUpdate(handleContentUpdate);
+    websocketService.onContentDeleted(handleContentDeleted);
+
+    // Cleanup function
+    return () => {
+      websocketService.removeContentUpdateListener(handleContentUpdate);
+      websocketService.removeContentDeletedListener(handleContentDeleted);
+    };
   }, []);
 
   const fetchContents = async () => {
@@ -81,14 +112,7 @@ export default function AdminContentPage() {
 
       const response = await getAllContentsAPI();
       console.log("Fetched contents:", response.data);
-
-      // Map _id to id
-      setContents(
-        response.data.map((item: any) => ({
-          ...item,
-          id: item._id,
-        }))
-      );
+      setContents(response.data);
     } catch (err) {
       setError("Failed to load content. Please try again.");
       console.error("Error fetching content:", err);
@@ -126,7 +150,7 @@ export default function AdminContentPage() {
             <CircularProgress />
           </Box>
         ) : contents.length > 0 ? (
-          contents.map((item) => <ContentCard key={item.id} content={item} />)
+          contents.map((item) => <ContentCard key={item._id} content={item} />)
         ) : (
           <Box sx={{ textAlign: "center", my: 4 }}>
             <Typography variant="body1" color="text.secondary">

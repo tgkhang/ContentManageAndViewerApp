@@ -10,3 +10,9 @@ export interface CreateUserDto {
 export type UpdateUserDto = Partial<Omit<CreateUserDto, "createdBy">> & {
   updatedBy?: string;
 };
+
+export interface User {
+  _id: string;
+  name: string;
+  username: string;
+}
