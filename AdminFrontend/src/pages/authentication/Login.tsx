@@ -53,6 +53,8 @@ export default function Login() {
         navigate("/admin");
       } else if (role === "editor") {
         navigate("/editor");
+      } else if(role =="client"){
+        navigate("/client")
       } else {
         navigate("/"); // Fallback
       }

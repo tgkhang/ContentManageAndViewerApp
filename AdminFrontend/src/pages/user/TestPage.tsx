@@ -6,6 +6,27 @@ export default function TestPage() {
   const location = useLocation();
   const isAdmin = location.pathname.startsWith("/admin");
   const isEditor = location.pathname.startsWith("/editor");
+  const isClient = location.pathname.startsWith("/client");
+
+  if (isClient)
+    return (
+      <>
+        <Page title="Dashboard">
+          <Paper
+            elevation={3}
+            sx={{
+              padding: 4,
+              mt: 7,
+              borderRadius: 2,
+            }}
+          >
+            <Typography variant="h4" gutterBottom>
+              This is page for admin client can not acess anything here
+            </Typography>
+          </Paper>
+        </Page>
+      </>
+    );
 
   return (
     <Page title="Dashboard">

@@ -3,6 +3,7 @@ import { Dashboard, AccountCircle, Group, Book } from "@mui/icons-material";
 const navEditorConfig = [
   { title: "Content", path: "/editor/contents", icon: <Dashboard /> },
 ];
+const navClientConfig = [{ title: "Home", path: "/", icon: <Dashboard /> }];
 
 const navAdminConfig = [
   { title: "User List", path: "/admin/users", icon: <Group /> },
@@ -19,4 +20,4 @@ const navAdminConfig = [
   },
 ];
 
-export { navEditorConfig, navAdminConfig };
+export { navClientConfig, navEditorConfig, navAdminConfig };

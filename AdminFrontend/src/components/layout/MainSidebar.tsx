@@ -18,7 +18,7 @@ import {
 import { styled } from "@mui/material/styles";
 // icons
 import MenuIcon from "@mui/icons-material/Menu";
-import { navAdminConfig, navEditorConfig } from "./NavConfig";
+import { navAdminConfig, navEditorConfig, navClientConfig } from "./NavConfig";
 import { AuthContext } from "../../contexts/JWTContext";
 
 // Types
@@ -124,7 +124,12 @@ export default function MainSideBar({
   const { user } = useContext(AuthContext);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
-  const navConfig = user?.role === "admin" ? navAdminConfig : navEditorConfig;
+  const navConfig =
+    user?.role === "admin"
+      ? navAdminConfig
+      : user?.role === "editor"
+      ? navEditorConfig
+      : navClientConfig;
 
   const renderContent = (
     <>

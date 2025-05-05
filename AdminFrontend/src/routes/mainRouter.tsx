@@ -117,6 +117,21 @@ export default function Router() {
       ],
     },
 
+    {
+      path: "client",
+      element: (
+        <AuthGuard>
+          <MainLayout />
+        </AuthGuard>
+      ),
+      children: [
+        {
+          path: "",
+          element: <TestPage />,
+        },
+      ],
+    },
+
     // Root redirect
     {
       path: "/",
