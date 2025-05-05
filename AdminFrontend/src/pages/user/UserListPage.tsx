@@ -26,7 +26,6 @@ import {
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
-import useAuth from "../../hooks/useAuth";
 
 // User interface based on the API response
 interface User {
@@ -69,6 +68,7 @@ export default function UserListPage() {
 
   useEffect(() => {
     fetchUsers();
+    console.log(initialLoading)
   }, []);
 
   const fetchUsers = async () => {
