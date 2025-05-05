@@ -31,7 +31,7 @@ const ContentPage = Loadable(
   lazy(() => import("../pages/content/ContentPage"))
 );
 const ContentDetailPage = Loadable(
-  lazy(() => import("../pages/content/ContainDetailPage"))
+  lazy(() => import("../pages/content/ContentDetailPage"))
 );
 
 export default function Router() {

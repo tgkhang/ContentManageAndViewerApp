@@ -38,7 +38,7 @@ const CreateNewUserPage = Loadable(
   lazy(() => import("../pages/user/CreateNewUserPage"))
 );
 const ContentDetailPage = Loadable(
-  lazy(() => import("../pages/content/ContainDetailPage"))
+  lazy(() => import("../pages/content/ContentDetailPage"))
 );
 
 export default function Router() {
