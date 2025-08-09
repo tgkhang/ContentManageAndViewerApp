@@ -36,11 +36,14 @@ export class AuthService {
     try {
       const user = await this.usersService.findByEmail(input.email);
 
-      // hash
-      const isMatch = await bcrypt.compare(
-        input.password,
-        user.password || '123123',
-      );
+      // Ensure user has a password set
+      if (!user.password) {
+        console.warn(`User ${input.email} has no password set`);
+        return null;
+      }
+
+      // Verify password hash
+      const isMatch = await bcrypt.compare(input.password, user.password);
 
       if (isMatch) {
         return {
@@ -50,16 +53,10 @@ export class AuthService {
         };
       }
 
-      // if (user && user.password === input.password) {
-      //   return {
-      //     username: user.username,
-      //     userId: user._id.toString(), // Convert MongoDB ObjectId to string
-      //     role: user.role,
-      //   };
-      // }
       return null;
     } catch (err) {
-      console.log(err);
+      // Log authentication errors for security monitoring
+      console.error('Authentication error:', err.message);
       return null;
     }
   }

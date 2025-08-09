@@ -25,6 +25,7 @@ export class PassportAuthController {
     //return this.authService.authenticate(input);
   }
 
+  @UseGuards(AuthGuard)
   @Get('me')
   getUserInfo(@Request() request) {
     return request.user;

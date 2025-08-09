@@ -8,9 +8,11 @@ import {
   Post,
   Request,
   UseGuards,
+  ValidationPipe,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from './guards/auth.guard';
+import { LoginDto } from './dto/login.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -18,8 +20,7 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  login(@Body() input: { email: string; password: string }) {
-    //throw new NotImplementedException('Not implemented yet');
+  login(@Body(ValidationPipe) input: LoginDto) {
     return this.authService.authenticate(input);
   }
 
