@@ -1,10 +1,8 @@
 import {
-  Body,
   Controller,
   Get,
   HttpCode,
   HttpStatus,
-  NotImplementedException,
   Post,
   Request,
   UseGuards,
@@ -25,6 +23,7 @@ export class PassportAuthController {
     //return this.authService.authenticate(input);
   }
 
+  @UseGuards(AuthGuard)
   @Get('me')
   getUserInfo(@Request() request) {
     return request.user;

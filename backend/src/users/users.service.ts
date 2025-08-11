@@ -66,20 +66,11 @@ export class UsersService {
   }
 
   async findByEmail(email: string) {
-    try {
-      const user = await this.userModel.findOne({ email }).exec();
-      if (!user) {
-        throw new Error('User not found');
-      }
-      return user;
-    } catch (error) {
-      if (error.message === 'User not found') {
-        throw error;
-      }
-      // Log database errors for debugging
-      console.error('Database error in findByEmail:', error);
-      throw new Error('Database operation failed');
+    const user = await this.userModel.findOne({ email }).exec();
+    if (!user) {
+      throw new Error('User not found');
     }
+    return user;
   }
 
   async findByUsername(username: string) {
