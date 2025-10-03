@@ -1,9 +1,14 @@
+import { BrowserRouter } from "react-router";
+import { AuthProvider } from "./contexts/JWTContext";
+import Router from "./routes/mainRouter";
 
 function App() {
   return (
-    <>
-      <h1>APP</h1>
-    </>
+    <BrowserRouter>
+      <AuthProvider>
+        <Router />
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
 

@@ -9,10 +9,12 @@ import {
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ChangePasswordDto } from './dto/change-password.dto';
+import { UserResponseDto } from './dto/user-response.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from 'src/schemas/user.schema';
 import { Model } from 'mongoose';
 import * as bcrypt from 'bcrypt';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class UsersService {
@@ -46,9 +48,10 @@ export class UsersService {
 
       const savedUser = await newUser.save();
 
-      // Return user without password
-      const { password, ...userWithoutPassword } = savedUser.toObject();
-      return userWithoutPassword;
+      // Transform to UserResponseDto (converts _id to id)
+      return plainToInstance(UserResponseDto, savedUser.toObject(), {
+        excludeExtraneousValues: false,
+      });
     } catch (error) {
       if (error instanceof ConflictException) {
         throw error;
@@ -79,18 +82,24 @@ export class UsersService {
           .skip(skip)
           .limit(limit)
           .sort({ createdAt: -1 })
+          .lean() // Convert Mongoose documents to plain JavaScript objects
           .exec(),
         this.userModel.countDocuments(searchQuery).exec(),
       ]);
 
+      // Transform users to UserResponseDto (converts _id to id)
+      const transformedUsers = users.map(user =>
+        plainToInstance(UserResponseDto, user, {
+          excludeExtraneousValues: false,
+        })
+      );
+
       return {
-        data: users,
-        pagination: {
-          currentPage: page,
-          totalPages: Math.ceil(total / limit),
-          totalItems: total,
-          itemsPerPage: limit,
-        },
+        data: transformedUsers,
+        total: total,
+        page: page,
+        limit: limit,
+        totalPages: Math.ceil(total / limit),
       };
     } catch {
       throw new InternalServerErrorException('Failed to fetch users');
@@ -106,13 +115,17 @@ export class UsersService {
       const user = await this.userModel
         .findById(id)
         .select('-password') // Exclude password from result
+        .lean()
         .exec();
 
       if (!user) {
         throw new NotFoundException('User not found');
       }
 
-      return user;
+      // Transform to UserResponseDto (converts _id to id)
+      return plainToInstance(UserResponseDto, user, {
+        excludeExtraneousValues: false,
+      });
     } catch (error) {
       if (
         error instanceof BadRequestException ||
@@ -166,9 +179,13 @@ export class UsersService {
       const updatedUser = await this.userModel
         .findByIdAndUpdate(id, updateUserDto, { new: true })
         .select('-password')
+        .lean()
         .exec();
 
-      return updatedUser;
+      // Transform to UserResponseDto (converts _id to id)
+      return plainToInstance(UserResponseDto, updatedUser, {
+        excludeExtraneousValues: false,
+      });
     } catch (error) {
       if (
         error instanceof BadRequestException ||

@@ -6,8 +6,8 @@ export class UserResponseDto {
     description: 'User ID',
     example: '64f8a8b4c1d2e3f4a5b6c7d8',
   })
-  @Transform(({ value }: { value: unknown }) => String(value))
-  _id: string;
+  @Transform(({ obj }) => String(obj._id))
+  id: string;
 
   @ApiProperty({
     description: 'The name of the user',

@@ -9,18 +9,26 @@ export class PaginatedUsersResponseDto {
   data: UserResponseDto[];
 
   @ApiProperty({
-    description: 'Pagination information',
-    example: {
-      currentPage: 1,
-      totalPages: 5,
-      totalItems: 50,
-      itemsPerPage: 10,
-    },
+    description: 'Total number of users',
+    example: 50,
   })
-  pagination: {
-    currentPage: number;
-    totalPages: number;
-    totalItems: number;
-    itemsPerPage: number;
-  };
+  total: number;
+
+  @ApiProperty({
+    description: 'Current page number',
+    example: 1,
+  })
+  page: number;
+
+  @ApiProperty({
+    description: 'Number of items per page',
+    example: 10,
+  })
+  limit: number;
+
+  @ApiProperty({
+    description: 'Total number of pages',
+    example: 5,
+  })
+  totalPages: number;
 }
