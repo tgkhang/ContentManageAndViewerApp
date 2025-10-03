@@ -4,20 +4,6 @@ This is a full-stack content management and viewing application consisting of th
 
 ## Project Structure
 
-### Version 1 (Working Version)
-- `backend/` - NestJS backend server ✅ Working
-- `ClientFrontend/` - React-based client-facing website ✅ Working  
-- `AdminFrontend/` - React-based admin dashboard ✅ Working
-
-### Version 2 (Recommended)
-Each project has its own setup instructions. Please refer to their respective README files:
-
-- [Backend Setup](./v2/backend-v2/README.md)
-- [Client Frontend Setup](./v2/clientFrontend/README.md)
-- [Admin Frontend Setup](./v2/adminFrontend/README.md)
-
-## Getting Started
-
 ### Version 1 (Old version)
 Each project has its own setup instructions. Please refer to their respective README files:
 
@@ -25,8 +11,10 @@ Each project has its own setup instructions. Please refer to their respective RE
 - [Client Frontend Setup](./v1/ClientFrontend/README.md)
 - [Admin Frontend Setup](./v1/AdminFrontend/README.md)
 
-### Version 2 (Development)
-- [Backend v2 Setup](./v2/backend-v2/README.md) - ⚠️ Still in development, only backend is being worked on.
+### Version 2 (New)
+- [Backend v2 Setup](./v2/backend-v2/README.md)
+- [Client Frontend v2 Setup](./v2/clientFrontend/README.md)
+- [Admin Frontend v2 Setup](./v2/adminFrontend/README.md)
 
 ## Development
 
