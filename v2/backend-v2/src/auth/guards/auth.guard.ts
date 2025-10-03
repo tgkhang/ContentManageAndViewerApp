@@ -55,7 +55,8 @@ export class AuthGuard implements CanActivate {
         userId: tokenPayload.userId,
         username: tokenPayload.username,
         role: tokenPayload.role,
-        // email : tokenPayload.email,
+        email: tokenPayload.email,
+        name: tokenPayload.name,
       };
       return true;
     } catch (err: unknown) {

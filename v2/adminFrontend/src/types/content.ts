@@ -33,6 +33,17 @@ export interface Content {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface PaginatedContentsResponse {
+  data: Content[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
+
 export interface ContentCardProps {
   content: Content;
 }
+
+export type Block = ContentBlock;

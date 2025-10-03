@@ -8,7 +8,10 @@ import {
   IconButton,
   Toolbar,
   Typography,
+  useTheme,
+  useMediaQuery,
 } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
 import ProfileMenu from "../ProfileMenu";
 import { styled } from "@mui/material/styles";
 
@@ -30,8 +33,14 @@ interface User {
   role: string;
 }
 
-export default function MainHeader(): React.ReactElement | null {
+interface MainHeaderProps {
+  onToggleSidebar: () => void;
+}
+
+export default function MainHeader({ onToggleSidebar }: MainHeaderProps): React.ReactElement | null {
   const { user, isAuthenticated } = useAuth();
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("lg"));
   const [openProfileMenu, setOpenProfileMenu] = useState<boolean>(false);
   const [anchorProfile, setAnchorProfile] = useState<HTMLElement | null>(null);
 
@@ -55,6 +64,19 @@ export default function MainHeader(): React.ReactElement | null {
           justifyContent: "space-between",
         }}
       >
+        {isMobile && isAuthenticated && (
+          <IconButton
+            onClick={onToggleSidebar}
+            sx={{
+              mr: 1,
+              "&:hover": {
+                backgroundColor: "rgba(0, 0, 0, 0.04)",
+              },
+            }}
+          >
+            <MenuIcon />
+          </IconButton>
+        )}
         <Typography
           sx={{
             flexGrow: 1,

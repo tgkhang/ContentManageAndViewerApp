@@ -7,12 +7,6 @@ const navClientConfig = [{ title: "Home", path: "/", icon: <Dashboard /> }];
 
 const navAdminConfig = [
   { title: "User List", path: "/admin/users", icon: <Group /> },
-
-  {
-    title: "Creat New User",
-    path: "/admin/createUser",
-    icon: <AccountCircle />,
-  },
   {
     title: "Content List",
     path: "/admin/contents",

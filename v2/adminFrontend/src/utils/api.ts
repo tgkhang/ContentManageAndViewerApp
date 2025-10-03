@@ -27,7 +27,8 @@ export const deleteUserAPI = (id: string) =>
 //contents
 export const createContentAPI = (data: CreateContentDto) =>
   axiosInstance.post("/contents", data);
-export const getAllContentsAPI = () => axiosInstance.get("/contents");
+export const getAllContentsAPI = (params?: { page?: number; limit?: number; search?: string }) =>
+  axiosInstance.get("/contents", { params });
 export const getContentByUserIdAPI = (userId: string) =>
   axiosInstance.get(`/contents/user/${userId}`);
 export const getContentByIdAPI = (id: string) =>

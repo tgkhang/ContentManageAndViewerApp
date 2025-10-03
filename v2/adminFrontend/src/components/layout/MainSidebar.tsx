@@ -237,8 +237,9 @@ export default function MainSideBar({
 
   return (
     <Drawer
-      open={!isMobile}
+      open={isMobile ? isOpenSidebar : true}
       variant={isMobile ? "temporary" : "permanent"}
+      onClose={isMobile ? onToggleSidebar : undefined}
       sx={{
         width: isOpenSidebar ? COLLAPSED_WIDTH : DRAWER_WIDTH,
         transition: theme.transitions.create("width", {
@@ -251,8 +252,8 @@ export default function MainSideBar({
           }),
           bgcolor: "background.default",
           position: "fixed",
-          height: "calc(100vh - 64px)",
-          marginTop: "64px",
+          height: isMobile ? "100vh" : "calc(100vh - 64px)",
+          marginTop: isMobile ? 0 : "64px",
           boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.15)",
           overflowX: "hidden",
           display: "flex",

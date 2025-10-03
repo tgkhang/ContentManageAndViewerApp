@@ -21,6 +21,7 @@ import {
   ApiResponse,
   ApiBearerAuth,
 } from '@nestjs/swagger';
+import { JwtService } from '@nestjs/jwt';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -38,7 +39,10 @@ import { Roles } from '../auth/decorators/roles.decorator';
 @UseGuards(AuthGuard, RolesGuard)
 @UseInterceptors(ClassSerializerInterceptor)
 export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly jwtService: JwtService,
+  ) {}
 
   @Post()
   @Roles('admin')
@@ -71,6 +75,17 @@ export class UsersController {
     return this.usersService.findAll(page, limit, search);
   }
 
+  @Get('me')
+  @ApiOperation({ summary: 'Get current user profile from database' })
+  @ApiResponse({
+    status: 200,
+    description: 'Current user profile',
+    type: UserResponseDto,
+  })
+  async getCurrentUserProfile(@Request() req) {
+    return this.usersService.findOne(req.user.userId);
+  }
+
   @Get(':id')
   @ApiOperation({ summary: 'Get user by ID' })
   @ApiResponse({
@@ -91,12 +106,43 @@ export class UsersController {
   @ApiOperation({ summary: 'Update current user profile' })
   @ApiResponse({
     status: 200,
-    description: 'Profile updated successfully',
-    type: UserResponseDto,
+    description: 'Profile updated successfully with new token',
+    schema: {
+      type: 'object',
+      properties: {
+        user: { type: 'object' },
+        access_token: { type: 'string' },
+      },
+    },
   })
   async updateProfile(@Body() updateUserDto: UpdateUserDto, @Request() req) {
     updateUserDto.updatedBy = req.user.userId;
-    return this.usersService.update(req.user.userId, updateUserDto);
+    const updatedUser = await this.usersService.update(
+      req.user.userId,
+      updateUserDto,
+    );
+
+    console.log('Updated user object:', updatedUser);
+    console.log('Updated user id:', updatedUser.id);
+
+    // Generate new JWT token with updated user data
+    // Use the userId from the request if updatedUser.id is undefined
+    const tokenPayload = {
+      userId: updatedUser.id || req.user.userId,
+      username: updatedUser.username,
+      role: updatedUser.role,
+      email: updatedUser.email,
+      name: updatedUser.name,
+    };
+
+    console.log('Token payload:', tokenPayload);
+
+    const access_token = await this.jwtService.signAsync(tokenPayload);
+
+    return {
+      user: updatedUser,
+      access_token,
+    };
   }
 
   @Patch('me/change-password')

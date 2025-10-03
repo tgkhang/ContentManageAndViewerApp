@@ -3,6 +3,7 @@ export interface JwtPayload {
   username: string;
   role: 'admin' | 'editor' | 'client';
   email?: string;
+  name?: string;
   iat?: number;
   exp?: number;
 }
@@ -13,6 +14,7 @@ export interface AuthenticatedRequest extends Request {
     username: string;
     role: string;
     email?: string;
+    name?: string;
   };
 }
 

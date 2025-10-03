@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { getAllUsersAPI, updateUserAPI, deleteUserAPI } from "../../utils/api";
+import { getAllUsersAPI, updateUserAPI, deleteUserAPI, createUserAPI } from "../../utils/api";
 import Page from "../../components/Page";
 import type { UpdateUserDto, PaginatedUsersResponse } from "../../types/user";
 import {
@@ -27,11 +27,17 @@ import {
   InputAdornment,
   IconButton,
   Chip,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SearchIcon from "@mui/icons-material/Search";
 import ClearIcon from "@mui/icons-material/Clear";
+import AddIcon from "@mui/icons-material/Add";
+import type { SelectChangeEvent } from "@mui/material";
 
 // User interface based on the API response
 interface User {
@@ -70,6 +76,17 @@ export default function UserListPage() {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState<boolean>(false);
   const [userToDelete, setUserToDelete] = useState<User | null>(null);
   const [deleteLoading, setDeleteLoading] = useState<boolean>(false);
+
+  // For create user functionality
+  const [createDialogOpen, setCreateDialogOpen] = useState<boolean>(false);
+  const [createFormData, setCreateFormData] = useState({
+    name: "",
+    username: "",
+    email: "",
+    password: "",
+    role: "client",
+  });
+  const [createLoading, setCreateLoading] = useState<boolean>(false);
 
   // For notifications
   const [snackbarOpen, setSnackbarOpen] = useState<boolean>(false);
@@ -238,6 +255,72 @@ export default function UserListPage() {
     }
   };
 
+  // Handle create user
+  const handleCreateClick = () => {
+    setCreateDialogOpen(true);
+  };
+
+  const handleCreateDialogClose = () => {
+    setCreateDialogOpen(false);
+    setCreateFormData({
+      name: "",
+      username: "",
+      email: "",
+      password: "",
+      role: "client",
+    });
+  };
+
+  const handleCreateInputChange = (
+    e: React.ChangeEvent<HTMLInputElement> | SelectChangeEvent
+  ) => {
+    const { name, value } = e.target;
+    setCreateFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleCreateUser = async () => {
+    // Basic validation
+    if (!createFormData.name.trim() || !createFormData.username.trim() || !createFormData.email.trim() || !createFormData.password.trim()) {
+      setSnackbarMessage("Please fill in all required fields");
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
+      return;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(createFormData.email)) {
+      setSnackbarMessage("Please enter a valid email address");
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
+      return;
+    }
+
+    try {
+      setCreateLoading(true);
+      await createUserAPI({
+        name: createFormData.name,
+        username: createFormData.username,
+        email: createFormData.email,
+        password: createFormData.password,
+        role: createFormData.role as "admin" | "editor" | "client",
+      });
+
+      setSnackbarMessage("User created successfully");
+      setSnackbarSeverity("success");
+      setSnackbarOpen(true);
+      handleCreateDialogClose();
+      fetchUsers();
+    } catch (error: any) {
+      console.error("Error creating user:", error);
+      setSnackbarMessage(error.response?.data?.message || "Failed to create user");
+      setSnackbarSeverity("error");
+      setSnackbarOpen(true);
+    } finally {
+      setCreateLoading(false);
+    }
+  };
+
   return (
     <Page title="User Management">
       <Container maxWidth="lg" sx={{ mt: 10 }}>
@@ -248,9 +331,19 @@ export default function UserListPage() {
           >
             User Management
           </Typography>
-          <Typography variant="body2" color="text.secondary">
-            Total Users: {totalUsers}
-          </Typography>
+          <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+            <Typography variant="body2" color="text.secondary">
+              Total Users: {totalUsers}
+            </Typography>
+            <Button
+              variant="contained"
+              color="primary"
+              startIcon={<AddIcon />}
+              onClick={handleCreateClick}
+            >
+              Create User
+            </Button>
+          </Box>
         </Box>
 
         {/* Search Bar */}
@@ -376,6 +469,89 @@ export default function UserListPage() {
           </>
         )}
       </Container>
+
+      {/* Create User Dialog */}
+      <Dialog
+        open={createDialogOpen}
+        onClose={handleCreateDialogClose}
+        fullWidth
+        maxWidth="sm"
+      >
+        <DialogTitle>Create New User</DialogTitle>
+        <DialogContent>
+          <Box
+            component="form"
+            sx={{ mt: 2, display: "flex", flexDirection: "column", gap: 2 }}
+          >
+            <TextField
+              fullWidth
+              required
+              label="Name"
+              name="name"
+              value={createFormData.name}
+              onChange={handleCreateInputChange}
+            />
+            <TextField
+              fullWidth
+              required
+              label="Username"
+              name="username"
+              value={createFormData.username}
+              onChange={handleCreateInputChange}
+            />
+            <TextField
+              fullWidth
+              required
+              label="Email"
+              name="email"
+              type="email"
+              value={createFormData.email}
+              onChange={handleCreateInputChange}
+            />
+            <TextField
+              fullWidth
+              required
+              label="Password"
+              name="password"
+              type="password"
+              value={createFormData.password}
+              onChange={handleCreateInputChange}
+            />
+            <FormControl fullWidth required>
+              <InputLabel id="create-role-label">Role</InputLabel>
+              <Select
+                labelId="create-role-label"
+                name="role"
+                value={createFormData.role}
+                label="Role"
+                onChange={handleCreateInputChange}
+              >
+                <MenuItem value="admin">Admin</MenuItem>
+                <MenuItem value="editor">Editor</MenuItem>
+                <MenuItem value="client">Client</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCreateDialogClose} disabled={createLoading}>
+            Cancel
+          </Button>
+          <Button
+            onClick={handleCreateUser}
+            variant="contained"
+            color="primary"
+            disabled={createLoading}
+            startIcon={
+              createLoading ? (
+                <CircularProgress size={20} color="inherit" />
+              ) : null
+            }
+          >
+            {createLoading ? "Creating..." : "Create User"}
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       {/* Edit User Dialog */}
       <Dialog

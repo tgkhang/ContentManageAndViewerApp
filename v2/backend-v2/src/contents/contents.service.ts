@@ -26,12 +26,42 @@ export class ContentsService {
     return populatedContent;
   }
 
-  async findAll(): Promise<ContentDocument[]> {
-    return this.contentModel
-      .find()
-      .populate('createdBy', 'name username')
-      .populate('updatedBy', 'name username')
-      .exec();
+  async findAll(page: number = 1, limit: number = 10, search?: string) {
+    try {
+      const skip = (page - 1) * limit;
+
+      // Build search query
+      const searchQuery = search
+        ? {
+            $or: [
+              { title: { $regex: search, $options: 'i' } },
+              { description: { $regex: search, $options: 'i' } },
+            ],
+          }
+        : {};
+
+      const [contents, total] = await Promise.all([
+        this.contentModel
+          .find(searchQuery)
+          .populate('createdBy', 'name username')
+          .populate('updatedBy', 'name username')
+          .skip(skip)
+          .limit(limit)
+          .sort({ createdAt: -1 })
+          .exec(),
+        this.contentModel.countDocuments(searchQuery).exec(),
+      ]);
+
+      return {
+        data: contents,
+        total: total,
+        page: page,
+        limit: limit,
+        totalPages: Math.ceil(total / limit),
+      };
+    } catch (error) {
+      throw new Error('Failed to fetch contents');
+    }
   }
 
   async findOne(id: string): Promise<ContentDocument> {

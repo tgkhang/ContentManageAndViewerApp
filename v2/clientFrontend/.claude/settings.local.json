@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//d/PERSONAL PAGE/REPO/ContentManageAndViewerApp/v2/backend-v2/src/users/**)",
+      "Read(//d/PERSONAL PAGE/REPO/ContentManageAndViewerApp/v2/backend-v2/src/auth/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

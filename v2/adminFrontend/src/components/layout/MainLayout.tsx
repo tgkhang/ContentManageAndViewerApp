@@ -37,7 +37,7 @@ export default function MainLayout(): React.ReactElement | null {
         bgcolor: "background.default",
       }}
     >
-      <MainHeader />
+      <MainHeader onToggleSidebar={() => setCollapse(!isCollapse)} />
 
       <MainSideBar
         isOpenSidebar={isCollapse}
