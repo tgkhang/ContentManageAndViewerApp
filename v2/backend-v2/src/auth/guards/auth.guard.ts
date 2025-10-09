@@ -32,6 +32,7 @@ export class AuthGuard implements CanActivate {
     if (!authorization) {
       throw new UnauthorizedException('No authorization header provided');
     }
+
     const token = authorization.split(' ')[1];
     if (!token) {
       throw new UnauthorizedException('No token provided');
@@ -40,7 +41,7 @@ export class AuthGuard implements CanActivate {
     try {
       const tokenPayload = await this.jwtService.verifyAsync<JwtPayload>(token);
 
-      console.log('Token payload:', tokenPayload);
+      //console.log('Token payload:', tokenPayload);
 
       // Validate token payload structure
       if (
@@ -58,7 +59,9 @@ export class AuthGuard implements CanActivate {
         email: tokenPayload.email,
         name: tokenPayload.name,
       };
+
       return true;
+      
     } catch (err: unknown) {
       // Log authentication failures for security monitoring
       const errorMessage = err instanceof Error ? err.message : 'Unknown error';

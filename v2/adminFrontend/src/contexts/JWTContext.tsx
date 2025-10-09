@@ -1,14 +1,17 @@
+// This context is used to manage authentication state using JWT (JSON Web Tokens).
+
 import { createContext, useEffect, useReducer, type ReactNode } from "react";
 import { isValidToken, setSession } from "../utils/jwt";
 import { validateAPI } from "../utils/api";
 import type { User } from "../types/user";
 
 interface AuthState {
-  isAuthenticated: boolean; //login status
-  isInitialized: boolean; //delay rendering until the check is complete
-  user: User | null;
+  isAuthenticated: boolean; // login status
+  isInitialized: boolean; // delay rendering until the check is complete
+  user: User | null; // user data or null if not login
 }
 
+// initial state when app first loads
 const initialState: AuthState = {
   isAuthenticated: false,
   isInitialized: false,
@@ -17,12 +20,12 @@ const initialState: AuthState = {
 
 // Action Types reducer handle
 type AuthAction =
-  //fisrt load
+  // fisrt load
   | {
       type: "INITIALIZE";
       payload: { isAuthenticated: boolean; user: User | null };
     }
-  //    after login
+  // after login
   | {
       type: "LOGIN";
       payload: { user: User };
@@ -30,6 +33,28 @@ type AuthAction =
   | {
       type: "LOGOUT";
     };
+
+/*
+INITIALIZE - On app startup
+
+Checks if token exists in localStorage
+Validates token with backend
+Sets initial auth state
+
+
+LOGIN - After successful login
+
+Saves token
+Stores user data
+Updates state to authenticated
+
+
+LOGOUT - When user logs out
+
+Removes token
+Clears user data
+Updates state to not authenticated
+*/
 
 //map of action types to functions
 const handlers: Record<

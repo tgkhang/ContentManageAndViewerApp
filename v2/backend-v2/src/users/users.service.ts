@@ -41,6 +41,7 @@ export class UsersService {
 
       // Hash password before saving
       const hashedPassword = await bcrypt.hash(createUserDto.password, 12);
+
       const newUser = new this.userModel({
         ...createUserDto,
         password: hashedPassword,
@@ -48,10 +49,12 @@ export class UsersService {
 
       const savedUser = await newUser.save();
 
-      // Transform to UserResponseDto (converts _id to id)
+      //transforms a plain JavaScript object into an instance of a class 
+      //using the class-transformer library.
       return plainToInstance(UserResponseDto, savedUser.toObject(), {
         excludeExtraneousValues: false,
       });
+
     } catch (error) {
       if (error instanceof ConflictException) {
         throw error;
@@ -90,6 +93,7 @@ export class UsersService {
       // Transform users to UserResponseDto (converts _id to id)
       const transformedUsers = users.map(user =>
         plainToInstance(UserResponseDto, user, {
+          // Keep properties not in DTO
           excludeExtraneousValues: false,
         })
       );
@@ -126,6 +130,7 @@ export class UsersService {
       return plainToInstance(UserResponseDto, user, {
         excludeExtraneousValues: false,
       });
+
     } catch (error) {
       if (
         error instanceof BadRequestException ||
@@ -186,6 +191,7 @@ export class UsersService {
       return plainToInstance(UserResponseDto, updatedUser, {
         excludeExtraneousValues: false,
       });
+      
     } catch (error) {
       if (
         error instanceof BadRequestException ||
@@ -233,10 +239,12 @@ export class UsersService {
         .findOne({ email })
         .select('+password')
         .exec();
+
       if (!user) {
         throw new NotFoundException('User not found');
       }
       return user;
+
     } catch (error) {
       if (
         error instanceof BadRequestException ||
@@ -259,10 +267,13 @@ export class UsersService {
         .findOne({ username })
         .select('+password')
         .exec();
+
       if (!user) {
         throw new NotFoundException('User not found');
       }
+
       return user;
+
     } catch (error) {
       if (
         error instanceof BadRequestException ||
@@ -311,8 +322,7 @@ export class UsersService {
         .exec();
 
       return { message: 'Password changed successfully' };
-    } catch (error) {
-      if (
+    } catch (error) {      if (
         error instanceof NotFoundException ||
         error instanceof UnauthorizedException ||
         error instanceof BadRequestException

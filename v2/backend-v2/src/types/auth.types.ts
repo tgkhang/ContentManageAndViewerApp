@@ -1,3 +1,4 @@
+// structure of data stored inside a JWT
 export interface JwtPayload {
   userId: string;
   username: string;
@@ -8,6 +9,7 @@ export interface JwtPayload {
   exp?: number;
 }
 
+// standard Request object to include authenticated user data.
 export interface AuthenticatedRequest extends Request {
   user: {
     userId: string;
@@ -18,6 +20,7 @@ export interface AuthenticatedRequest extends Request {
   };
 }
 
+// structure of the response sent after successful login.
 export interface LoginResponse {
   access_token: string;
   user: {

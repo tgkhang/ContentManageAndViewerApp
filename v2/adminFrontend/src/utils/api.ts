@@ -2,8 +2,6 @@ import type { CreateContentDto, UpdateContentDto } from "../types/content";
 import type { CreateUserDto, UpdateUserDto } from "../types/user";
 import axiosInstance from "./axios";
 
-
-
 // authentication
 export const loginAPI = (data: { email: string; password: string }) =>
   axiosInstance.post("/auth/login", data);
